@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartGrid AI · Power Intelligence</title>
+<link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+
+<nav id="navbar">
+  <div class="nav-brand">
+    <span class="brand-icon">⚡</span>
+    <span class="brand-text">SmartGrid<em>AI</em></span>
+  </div>
+
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+
+  <div class="nav-links" id="nav-links">
+    <a onclick="showPage('dashboard',this)" class="active" data-page="dashboard">
+      <span class="nav-icon">◉</span> Dashboard
+    </a>
+    <a onclick="showPage('forecast',this)" data-page="forecast">
+      <span class="nav-icon">◈</span> Forecast
+    </a>
+    <a onclick="showPage('analytics',this)" data-page="analytics">
+      <span class="nav-icon">◆</span> Analytics
+    </a>
+    <a onclick="showPage('districts',this)" data-page="districts">
+      <span class="nav-icon">◧</span> Districts
+    </a>
+    <a onclick="showPage('map',this)" data-page="map">
+      <span class="nav-icon">◎</span> Grid Map
+    </a>
+    <a onclick="showPage('history',this)" data-page="history">
+      <span class="nav-icon">◷</span> History
+    </a>
+    <a onclick="showPage('about',this)" data-page="about">
+      <span class="nav-icon">◌</span> About
+    </a>
+  </div>
+</nav>
+
+
+<div id="page-dashboard" class="page active">
+
+  <div class="page-header">
+    <div>
+      <p class="page-label">LIVE MONITORING</p>
+      <h1 class="page-title">Power Dashboard</h1>
+    </div>
+    <div class="live-badge">
+      <span class="pulse-dot"></span> LIVE
+    </div>
+     <button class="refresh-btn" onclick="refreshDashboard()">⟳ Refresh</button>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card primary">
+      <div class="stat-icon">⚡</div>
+      <div class="stat-info">
+        <p class="stat-label">Predicted Demand</p>
+        <p class="stat-value" id="prediction">--</p>
+        <p class="stat-unit">Megawatts</p>
+      </div>
+      <div class="stat-trend" id="demand-trend">↑</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">🌡</div>
+      <div class="stat-info">
+        <p class="stat-label">Temperature</p>
+        <p class="stat-value" id="temp">--</p>
+        <p class="stat-unit">Celsius</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">💨</div>
+      <div class="stat-info">
+        <p class="stat-label">Wind Speed</p>
+        <p class="stat-value" id="wind">--</p>
+        <p class="stat-unit">m/s</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">🔋</div>
+      <div class="stat-info">
+        <p class="stat-label">Grid Status</p>
+        <p class="stat-value small" id="status">--</p>
+        <p class="stat-unit">Current State</p>
+      </div>
+      <div class="status-dot" id="status-dot"></div>
+    </div>
+  </div>
+
+  <div class="card chart-card">
+    <div class="card-header">
+      <h3>24-Hour Demand Curve</h3>
+      <span class="card-tag">HOURLY</span>
+    </div>
+    <div id="hour-chart" class="chart"></div>
+    <div class="chart-labels">
+      <span>12AM</span><span>3AM</span><span>6AM</span><span>9AM</span>
+      <span>12PM</span><span>3PM</span><span>6PM</span><span>9PM</span>
+    </div>
+  </div>
+
+</div>
+
+
+<div id="page-forecast" class="page">
+
+  <div class="page-header">
+    <div>
+      <p class="page-label">AI-POWERED</p>
+      <h1 class="page-title">24-Hour Forecast</h1>
+    </div>
+  </div>
+
+  <div class="card chart-card">
+    <div class="card-header">
+      <h3>Predicted Load Curve</h3>
+      <span class="card-tag">FORECAST</span>
+    </div>
+    <div id="forecast-chart" class="chart forecast-chart"></div>
+    <div class="chart-labels">
+      <span>12AM</span><span>3AM</span><span>6AM</span><span>9AM</span>
+      <span>12PM</span><span>3PM</span><span>6PM</span><span>9PM</span>
+    </div>
+  </div>
+
+  <div class="forecast-cards">
+    <div class="f-card">
+      <p class="f-label">Peak Hour</p>
+      <p class="f-val" id="peak-hour">--</p>
+    </div>
+    <div class="f-card">
+      <p class="f-label">Peak Demand</p>
+      <p class="f-val" id="peak-demand">-- MW</p>
+    </div>
+    <div class="f-card">
+      <p class="f-label">Min Demand</p>
+      <p class="f-val" id="min-demand">-- MW</p>
+    </div>
+    <div class="f-card">
+      <p class="f-label">Avg Demand</p>
+      <p class="f-val" id="avg-demand">-- MW</p>
+    </div>
+  </div>
+
+</div>
+
+
+<div id="page-analytics" class="page">
+
+  <div class="page-header">
+    <div>
+      <p class="page-label">INSIGHTS</p>
+      <h1 class="page-title">Analytics</h1>
+    </div>
+  </div>
+
+  <div class="analytics-grid">
+
+    <div class="card">
+      <div class="card-header">
+        <h3>Model Performance</h3>
+        <span class="card-tag">ML</span>
+      </div>
+      <div class="metric-row">
+        <div class="metric">
+          <p class="metric-label">R² Score</p>
+          <p class="metric-val accent">0.94</p>
+        </div>
+        <div class="metric">
+          <p class="metric-label">RMSE</p>
+          <p class="metric-val">198</p>
+        </div>
+        <div class="metric">
+          <p class="metric-label">Algorithm</p>
+          <p class="metric-val small-val">Random Forest</p>
+        </div>
+      </div>
+      <div class="accuracy-bar-wrap">
+        <p class="stat-label">Model Accuracy</p>
+        <div class="acc-bar-bg">
+          <div class="acc-bar-fill" style="width:94%">94%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h3>Sector Distribution</h3>
+        <span class="card-tag">LIVE</span>
+      </div>
+
+      <div class="sector-row">
+        <div class="sector-info">
+          <span class="sector-dot res"></span>
+          <span class="sector-name">Residential</span>
+        </div>
+        <span class="sector-mw" id="res">-- MW</span>
+      </div>
+      <div class="bar-bg"><div class="bar-fill res-fill" id="res-bar"></div></div>
+
+      <div class="sector-row">
+        <div class="sector-info">
+          <span class="sector-dot com"></span>
+          <span class="sector-name">Commercial</span>
+        </div>
+        <span class="sector-mw" id="com">-- MW</span>
+      </div>
+      <div class="bar-bg"><div class="bar-fill com-fill" id="com-bar"></div></div>
+
+      <div class="sector-row">
+        <div class="sector-info">
+          <span class="sector-dot ind"></span>
+          <span class="sector-name">Industrial</span>
+        </div>
+        <span class="sector-mw" id="ind">-- MW</span>
+      </div>
+      <div class="bar-bg"><div class="bar-fill ind-fill" id="ind-bar"></div></div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<div id="page-districts" class="page">
+
+  <div class="page-header">
+    <div>
+      <p class="page-label">REGIONAL</p>
+      <h1 class="page-title">District Monitor</h1>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h3>District Load Status</h3>
+      <span class="card-tag">LIVE</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>District</th>
+            <th>Load</th>
+            <th>Capacity</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="district-name">Hyderabad</span></td>
+            <td>1,240 MW</td>
+            <td>
+              <div class="mini-bar"><div style="width:72%;background:#06b6d4"></div></div>
+            </td>
+            <td><span class="badge stable">Stable</span></td>
+          </tr>
+          <tr>
+            <td><span class="district-name">Warangal</span></td>
+            <td>820 MW</td>
+            <td>
+              <div class="mini-bar"><div style="width:88%;background:#f59e0b"></div></div>
+            </td>
+            <td><span class="badge high">High</span></td>
+          </tr>
+          <tr>
+            <td><span class="district-name">Karimnagar</span></td>
+            <td>690 MW</td>
+            <td>
+              <div class="mini-bar"><div style="width:55%;background:#06b6d4"></div></div>
+            </td>
+            <td><span class="badge stable">Stable</span></td>
+          </tr>
+          <tr>
+            <td><span class="district-name">Nizamabad</span></td>
+            <td>540 MW</td>
+            <td>
+              <div class="mini-bar"><div style="width:45%;background:#10b981"></div></div>
+            </td>
+            <td><span class="badge low">Low</span></td>
+          </tr>
+          <tr>
+            <td><span class="district-name">Khammam</span></td>
+            <td>410 MW</td>
+            <td>
+              <div class="mini-bar"><div style="width:38%;background:#10b981"></div></div>
+            </td>
+            <td><span class="badge low">Low</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+
+<div id="page-map" class="page">
+  <div class="page-header">
+    <div>
+      <p class="page-label">SPATIAL</p>
+      <h1 class="page-title">Smart Grid Map</h1>
+    </div>
+  </div>
+  <div class="card map-card">
+    <div id="map"></div>
+  </div>
+</div>
+
+
+<div id="page-history" class="page">
+
+  <div class="page-header">
+    <div>
+      <p class="page-label">RECORDS</p>
+      <h1 class="page-title">Prediction History</h1>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h3>Recent Predictions</h3>
+      <span class="card-tag">TODAY</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Prediction</th>
+            <th>Actual</th>
+            <th>Error</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>10:00 AM</td>
+            <td>19,500 MW</td>
+            <td>19,320 MW</td>
+            <td>0.93%</td>
+            <td><span class="badge stable">Good</span></td>
+          </tr>
+          <tr>
+            <td>12:00 PM</td>
+            <td>22,000 MW</td>
+            <td>22,540 MW</td>
+            <td>2.39%</td>
+            <td><span class="badge high">High</span></td>
+          </tr>
+          <tr>
+            <td>03:00 PM</td>
+            <td>21,200 MW</td>
+            <td>21,010 MW</td>
+            <td>0.90%</td>
+            <td><span class="badge stable">Good</span></td>
+          </tr>
+          <tr>
+            <td>06:00 PM</td>
+            <td>23,200 MW</td>
+            <td>23,890 MW</td>
+            <td>2.89%</td>
+            <td><span class="badge high">Peak</span></td>
+          </tr>
+          <tr>
+            <td>09:00 PM</td>
+            <td>18,900 MW</td>
+            <td>18,760 MW</td>
+            <td>0.74%</td>
+            <td><span class="badge low">Normal</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+
+<div id="page-about" class="page">
+
+  <div class="page-header">
+    <div>
+      <p class="page-label">PROJECT</p>
+      <h1 class="page-title">About SmartGrid AI</h1>
+    </div>
+  </div>
+
+  <div class="about-grid">
+
+    <div class="card about-card">
+      <div class="about-icon">🤖</div>
+      <h3>ML Engine</h3>
+      <p>Powered by a Random Forest model trained on historical grid demand, weather patterns, and regional load profiles.</p>
+    </div>
+
+    <div class="card about-card">
+      <div class="about-icon">📡</div>
+      <h3>Real-time Data</h3>
+      <p>Processes live inputs across districts including temperature, wind conditions, and consumer service metrics.</p>
+    </div>
+
+    <div class="card about-card">
+      <div class="about-icon">🗺️</div>
+      <h3>Regional Coverage</h3>
+      <p>Covers all districts across Telangana with per-division and per-section granularity for precise demand forecasting.</p>
+    </div>
+
+    <div class="card about-card">
+      <div class="about-icon">⚡</div>
+      <h3>Grid Intelligence</h3>
+      <p>Sector-wise breakdown of residential, commercial and industrial loads helps grid operators manage supply-demand balance.</p>
+    </div>
+
+  </div>
+
+</div>
+
+
+<footer>
+  <div class="footer-inner">
+    <span>⚡ SmartGrid AI</span>
+    <span class="footer-sep">·</span>
+    <span>Power Demand Intelligence System</span>
+    <span class="footer-sep">·</span>
+    <span id="footer-time"></span>
+  </div>
+</footer>
+
+<script src="/static/js/script.js"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?callback=initMap"></script>
+</body>
+</html>
