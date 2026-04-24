@@ -11,7 +11,6 @@ model = joblib.load("models/power_model.pkl")
 scaler = joblib.load("models/scaler.pkl")
 encoders = joblib.load("models/encoders.pkl")
 
-API_KEY = "36b222ee5cc0a2ccd4163f903bf8b1f8"
 
 LAT = 17.3850
 LON = 78.4867
