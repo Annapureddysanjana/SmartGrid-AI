@@ -7,9 +7,15 @@ import requests
 
 app = Flask(__name__)
 
-model = joblib.load("models/power_model.pkl")
-scaler = joblib.load("models/scaler.pkl")
-encoders = joblib.load("models/encoders.pkl")
+import os
+
+API_KEY = os.getenv("API_KEY")
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+model = joblib.load(os.path.join(BASE_DIR, "models/power_model.pkl"))
+scaler = joblib.load(os.path.join(BASE_DIR, "models/scaler.pkl"))
+encoders = joblib.load(os.path.join(BASE_DIR, "models/encoders.pkl"))
 
 
 LAT = 17.3850
@@ -128,4 +134,4 @@ def predict():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000)
